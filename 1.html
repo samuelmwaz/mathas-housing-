@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathas housing </title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;500;600;700&family=Lato:wght@300;400;500&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 1. CSS VARIABLES FOR DARK MODE (Default Theme) */
+        :root {
+            /* --- UPDATED COLORS BASED ON IMAGES --- */
+            --gold-accent: #edad0b; /* Dark Goldenrod / Brass tone */
+            --muted-gold: #a0937d; /* Stone Gray / Muted Earth tone */
+            
+            /* Dark Mode Colors (Default) - Retained structure */
+            --bg-body-gradient: linear-gradient(135deg, #1a1a1a 0%, #2c2c2c 50%, #1a1a1a 100%);
+            --bg-primary: #121212; /* Used for sections */
+            --bg-secondary: #1e1e1e; /* Used for cards/header/footer */
+            --text-primary: #ffffff;
+            --text-secondary: #c0c0c0; /* Slightly brighter secondary text */
+            --shadow-color: rgba(255, 255, 255, 0.05);
+            --border-color: #333;
+            --hover-bg: #282828;
+            --modal-bg: #1e1e1e;
+            --modal-backdrop: rgba(18, 18, 18, 0.95);
+            --header-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* 2. LIGHT MODE OVERRIDES */
+        .light-mode {
+            --bg-body-gradient: #ffffff; /* Solid white for body */
+            --bg-primary: #ffffff;
+            --bg-secondary: #ffffff;
+            --text-primary: #1a1a1a;
+            --text-secondary: #444;
+            --shadow-color: rgba(0, 0, 0, 0.05);
+            --border-color: #eee;
+            --hover-bg: #f5f5f5;
+            --modal-bg: #ffffff;
+            --modal-backdrop: rgba(255, 255, 255, 0.95);
+            --header-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        /* 3. APPLY VARIABLES TO ELEMENTS */
+        body {
+            font-family: 'Lato', sans-serif;
+            /* Uses the gradient in dark mode, and solid color in light mode */
+            background: var(--bg-body-gradient); 
+            color: var(--text-primary); 
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease; /* Smooth transition */
+        }
+
+        /* Premium Header */
+        .header {
+            background: var(--bg-secondary);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: var(--header-shadow);
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        .header-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .header-links a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .header-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            /* Uses the muted gold accent */
+            background: linear-gradient(90deg, var(--muted-gold), var(--gold-accent)); 
+            transition: width 0.3s ease;
+        }
+
+        .header-links a:hover {
+             /* Uses the main gold accent */
+            color: var(--gold-accent); 
+        }
+
+        .header-links a:hover::after {
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            flex: 1;
+        }
+
+        .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--text-primary);
+            letter-spacing: 4px;
+            font-weight: 300;
+            margin-bottom: 0.2rem;
+            text-shadow: none;
+            position: relative;
+        }
+
+        .logo p {
+            font-size: 0.9rem;
+            /* Uses the muted gold accent */
+            color: var(--muted-gold); 
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+        
+        /* New Theme Toggle Button Style */
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: background 0.3s ease, transform 0.3s ease;
+            margin-right: 1rem;
+            /* Ensure the icon color adapts to the theme */
+            color: var(--text-primary); 
+        }
+        
+        .theme-toggle:hover {
+            background: var(--hover-bg);
+            transform: scale(1.1);
+        }
+        
+        .user-actions {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .user-actions a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+        }
+
+        .user-actions a:hover {
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            border-color: var(--gold-accent);
+            background: var(--hover-bg);
+        }
+
+        /* Luxury Navigation */
+        .nav {
+            background: var(--bg-secondary);
+            padding: 1rem 0; 
+            border-top: 1px solid var(--border-color);
+            transition: background 0.5s ease, border-color 0.5s ease;
+        }
+
+        .nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            font-weight: 400;
+            letter-spacing: 1.5px;
+            padding: 0.5rem 1rem;
+            margin: 0 1rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav a::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: var(--hover-bg);
+            border-radius: 5px;
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+            z-index: -1;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+             /* Uses the main gold accent */
+            color: var(--gold-accent);
+        }
+
+        .nav a:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+        }
+
+        /* Dropdown Styles */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-arrow {
+            font-size: 0.7rem;
+            vertical-align: middle;
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-10px);
+            background: var(--bg-secondary);
+            min-width: 300px;
+            padding: 10px 0;
+            z-index: 1001;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            /* Uses the main gold accent for border */
+            border: 1px solid rgba(184, 134, 11, 0.3); 
+            border-radius: 8px;
+            display: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(5px);
+        }
+
+        .dropdown-content a {
+            color: var(--text-primary) !important;
+            padding: 12px 20px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+            text-transform: none;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0;
+            margin: 0;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .dropdown-content a:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-content a:hover {
+            background: var(--hover-bg) !important;
+             /* Uses the main gold accent */
+            color: var(--gold-accent) !important; 
+        }
+
+
+        /* Spectacular Hero Section */
+        .hero {
+            margin-top: 140px;
+            padding: 8rem 0; /* Increased padding to accommodate the circle */
+            background: var(--bg-primary);
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.5s ease;
+            overflow: hidden; /* Prevents the circle from causing scrollbars */
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative; /* Essential to place content above the circle */
+            z-index: 10;
+        }
+
+        .hero h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 5rem;
+            color: var(--text-primary);
+            font-weight: 300;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+             /* Uses the main gold accent */
+            text-shadow: 0 0 10px rgba(184, 134, 11, 0.2); 
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        /* --- MOVING CIRCLE FEATURE STYLES --- */
+        .moving-circle {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 600px;
+            height: 600px;
+            border-radius: 50%;
+            /* Uses the main gold accent */
+            border: 1px solid rgba(184, 134, 11, 0.2); 
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            transition: border-color 0.5s ease;
+            animation: pulse 8s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: translate(-50%, -50%) scale(1);
+                 /* Uses the main gold accent */
+                box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.4); 
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.05);
+                 /* Uses the main gold accent */
+                box-shadow: 0 0 30px 5px rgba(184, 134, 11, 0.6); 
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                 /* Uses the main gold accent */
+                box-shadow: 0 0 0 0 rgba(184, 134, 11, 0.4); 
+            }
+        }
+        /* --- END MOVING CIRCLE FEATURE STYLES --- */
+
+        /* Luxury Features */
+        .features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 350px;
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px var(--shadow-color);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            /* Uses the main gold accent */
+            color: var(--gold-accent);
+        }
+
+        .feature h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Premium Categories Section - Used for main content area */
+        .categories {
+            padding: 6rem 0;
+            background: var(--bg-primary);
+            transition: background 0.5s ease;
+        }
+
+        .categories-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            text-align: center;
+        }
+
+        .categories h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            color: var(--text-primary);
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .categories-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 900px;
+            margin: 0.5rem auto 3rem;
+            font-weight: 300;
+        }
+
+        .categories h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--text-primary);
+            font-weight: 400;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+        }
+        
+        /* Property Card Styles (Adapted from .category-card) */
+        .category-card {
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            transition: all 0.4s ease-in-out;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .category-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px var(--shadow-color);
+        }
+
+        .category-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .category-card:hover .category-img {
+            transform: scale(1.05);
+        }
+
+        .property-details {
+            padding: 35px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        /* Adapting text styles for property card content */
+        .property-card .property-title, .property-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: var(--text-primary);
+            margin: 0 0 0.5rem;
+            font-weight: 400;
+            text-align: left;
+        }
+
+        .property-card .property-price {
+            font-size: 2.2rem;
+            font-weight: 600;
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            margin-bottom: 10px;
+        }
+        
+        .property-card .property-location, .property-card p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            flex-grow: 1;
+        }
+        
+        .property-image {
+            height: 300px;
+            background: var(--bg-primary); /* Using primary background for placeholders */
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-image::after {
+            content: '🏠'; /* Keeping the icon */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 5rem;
+            opacity: 0.6;
+            filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.5));
+            color: var(--text-primary);
+        }
+
+        .property-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            /* Uses the gradient with the new colors */
+            background: linear-gradient(90deg, var(--muted-gold), var(--gold-accent)); 
+            color: #1a1a1a; /* Dark text for light badge */
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            z-index: 3;
+            /* Uses the main gold accent */
+            box-shadow: 0 4px 15px rgba(184, 134, 11, 0.3); 
+        }
+
+        .property-features {
+             display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .feature-item {
+            background: var(--hover-bg);
+            padding: 8px 15px;
+            border-radius: 5px;
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            border: 1px solid var(--border-color);
+        }
+
+
+        /* Filters Section (Adapted to new design) */
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 4rem;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            background: var(--bg-secondary);
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-label {
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-select, .filter-input {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            outline: none;
+            /* Uses the main gold accent */
+            border-color: var(--gold-accent); 
+            /* Uses the main gold accent */
+            box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2); 
+        }
+
+        .filter-select option {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        /* Reusing .category-card .btn styles for the search button */
+        .btn, .filter-btn, .view-btn {
+            /* Uses the gradient with the new colors */
+            background: linear-gradient(90deg, var(--muted-gold), var(--gold-accent));
+            color: #1a1a1a;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 1.5rem 0 0 0;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .filter-btn {
+            align-self: flex-start;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            /* Uses the main gold accent */
+            box-shadow: 0 5px 15px rgba(184, 134, 11, 0.4); 
+        }
+        
+        .contact-btn {
+             flex: 1;
+            padding: 0.8rem 1.5rem;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .contact-btn:hover {
+            /* Uses the main gold accent */
+            border-color: var(--gold-accent); 
+            color: var(--gold-accent);
+            background: var(--hover-bg);
+            transform: translateY(-2px);
+            /* Uses the main gold accent */
+            box-shadow: 0 5px 15px rgba(184, 134, 11, 0.1); 
+        }
+        
+        .property-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .view-btn {
+            flex: 1;
+            margin: 0;
+        }
+
+        /* Premium Footer */
+        .footer {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            padding: 4rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .footer h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 300;
+            margin-bottom: 0.5rem;
+        }
+
+        .footer p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 0.9rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+        }
+        
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            padding: 4rem 0 2rem;
+            gap: 10px;
+        }
+
+        .pagination a {
+            color: var(--text-primary);
+            text-decoration: none;
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .pagination a:hover {
+            background: var(--hover-bg);
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            border-color: var(--gold-accent);
+        }
+
+        .pagination a.active {
+            /* Uses the gradient with the new colors */
+            background: linear-gradient(90deg, var(--muted-gold), var(--gold-accent));
+            color: #1a1a1a;
+            border-color: var(--gold-accent);
+            font-weight: bold;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: var(--modal-backdrop);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background: var(--modal-bg);
+            margin: 5% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        .close-button {
+            color: var(--text-primary);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover, .close-button:focus {
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--text-primary);
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .modal-content p, .modal-content ul {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .modal-content ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+
+        .modal-content li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+        }
+
+        .modal-content li::before {
+            content: '•';
+            /* Uses the main gold accent */
+            color: var(--gold-accent); 
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+        }
+    </style>
+    </head>
+<body class="dark-mode-default">
+    
+    <header class="header">
+        <div class="header-top">
+            <div class="header-links">
+                <a href="#faq">FAQ's</a>
+                <a href="#contact-section">Contact</a>
+            </div>
+            <div class="logo">
+                <h1>Mathas housing </h1> <p>LUXURY ESTATES</p> </div>
+            <div class="user-actions">
+                <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">☀️</button>
+                <a href="#search">Search</a>
+                <a href="#account">Account</a>
+                <a href="#basket">Wishlist</a>
+            </div>
+        </div>
+        <nav class="nav">
+            <div class="nav-container">
+                <a href="#properties">Properties</a>
+                <a href="#areas">Areas</a>
+                <a href="#about">About</a>
+                <div class="dropdown">
+                    <a href="#" class="dropbtn">Services <span class="dropdown-arrow">&#9660;</span></a>
+                    <div class="dropdown-content">
+                        <a href="#sell">Sell With Us</a>
+                        <a href="#rent">Rentals</a>
+                        <a href="#advisory">Advisory</a>
+                    </div>
+                </div>
+                <a href="#contact-section">Contact Us</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h2>The World's Finest Properties<br>Awaits You</h2>
+            <p class="hero-subtitle">A curated collection of the world's most desirable homes, redefined by unparalleled elegance and sophistication.</p>
+            <div class="moving-circle"></div> 
+        </div>
+    </section>
+
+    <div class="categories"> <div class="categories-container"> <div class="filters"> <div class="filter-group"> 
+                    <h4 class="filter-label">Location</h4>
+                    <select class="filter-select">
+                        <option>All</option>
+                        <option>New York</option>
+                        <option>London</option>
+                        <option>Dubai</option>
+                        <option>Paris</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <h4 class="filter-label">Type</h4>
+                    <select class="filter-select">
+                        <option>All</option>
+                        <option>Apartment</option>
+                        <option>Villa</option>
+                        <option>Penthouse</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <h4 class="filter-label">Min Price ($M)</h4>
+                    <input type="number" class="filter-input" placeholder="e.g., 5" min="0" value="0">
+                </div>
+                <button class="filter-btn btn">Search Properties</button> 
+            </div>
+
+            <div class="category-grid" id="propertiesGrid"> <div class="category-card property-card"> <div class="property-image">
+                        <div class="property-badge">For Sale</div>
+                        <img src="https://via.placeholder.com/420x300.png?text=Property+Image+1" class="category-img" alt="Luxury Villa">
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-title">Oceanfront Mansion</h3>
+                        <p class="property-price">$15,000,000</p>
+                        <p class="property-location">Malibu, California</p>
+                        <p class="property-description">An architectural masterpiece with panoramic views, private beach access, and state-of-the-art smart home features.</p>
+                        <div class="property-features">
+                            <span class="feature-item">5 Bed</span>
+                            <span class="feature-item">7 Bath</span>
+                            <span class="feature-item">8,000 sqft</span>
+                        </div>
+                        <div class="property-actions">
+                            <a href="#" class="view-btn btn">View Details</a>
+                            <a href="#" class="contact-btn">Contact Agent</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card property-card">
+                    <div class="property-image">
+                        <div class="property-badge">For Rent</div>
+                        <img src="https://via.placeholder.com/420x300.png?text=Property+Image+2" class="category-img" alt="City Penthouse">
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-title">Billionaire's Penthouse</h3>
+                        <p class="property-price">$30,000/mo</p>
+                        <p class="property-location">Manhattan, New York</p>
+                        <p class="property-description">Full-floor residence atop a prestigious skyscraper. Offers 360-degree city views and white-glove service.</p>
+                        <div class="property-features">
+                            <span class="feature-item">3 Bed</span>
+                            <span class="feature-item">4 Bath</span>
+                            <span class="feature-item">4,500 sqft</span>
+                        </div>
+                        <div class="property-actions">
+                            <a href="#" class="view-btn btn">View Details</a>
+                            <a href="#" class="contact-btn">Contact Agent</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="category-card property-card">
+                    <div class="property-image">
+                        <div class="property-badge">For Sale</div>
+                        <img src="https://via.placeholder.com/420x300.png?text=Property+Image+3" class="category-img" alt="Private Estate">
+                    </div>
+                    <div class="property-details">
+                        <h3 class="property-title">Private Island Estate</h3>
+                        <p class="property-price">$55,000,000</p>
+                        <p class="property-location">The Bahamas</p>
+                        <p class="property-description">A secluded sanctuary offering ultimate privacy, multiple guest houses, and a private marina.</p>
+                        <div class="property-features">
+                            <span class="feature-item">8 Bed</span>
+                            <span class="feature-item">10 Bath</span>
+                            <span class="feature-item">12,000 sqft</span>
+                        </div>
+                        <div class="property-actions">
+                            <a href="#" class="view-btn btn">View Details</a>
+                            <a href="#" class="contact-btn">Contact Agent</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            
+            <div class="pagination">
+                <a href="#" class="page-btn active">1</a>
+                <a href="#" class="page-btn">2</a>
+                <a href="#" class="page-btn">3</a>
+                <a href="#" class="page-btn">Next</a>
+            </div>
+
+        </div>
+    </div>
+    
+    <footer class="footer"> <div class="footer-content">
+            <h3>ELYSE LUXURY ESTATES</h3>
+            <p>Discretion, Expertise, and Unparalleled Service in Global Real Estate.</p>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#properties">Properties</a>
+                <a href="#contact">Contact</a>
+                <a href="#privacy">Privacy Policy</a>
+            </div>
+            <p style="margin-top: 20px;">© 2024 Elyse Properties. All Rights Reserved. </p>
+        </div>
+    </footer>
+    
+    <div id="infoModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('infoModal')">&times;</span>
+            <div id="infoContent">
+                <h2>Modal Content</h2>
+                <p>This is a placeholder for dynamic content.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // JS functions from MAIN.PAGE.html to support the theme toggle and dropdown
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            const body = document.body;
+            
+            // Set initial theme based on class (dark-mode-default is set in body)
+            let isDarkMode = body.classList.contains('dark-mode-default');
+            themeToggle.innerHTML = isDarkMode ? '☀️' : '🌙';
+
+            themeToggle.addEventListener('click', () => {
+                isDarkMode = !isDarkMode;
+                if (isDarkMode) {
+                    body.classList.remove('light-mode');
+                    themeToggle.innerHTML = '☀️';
+                } else {
+                    body.classList.add('light-mode');
+                    themeToggle.innerHTML = '🌙';
+                }
+            });
+
+            // Dropdown logic from MAIN.PAGE.html
+            document.querySelectorAll('.dropdown').forEach(dropdown => {
+                const dropbtn = dropdown.querySelector('.dropbtn');
+                const dropdownContent = dropdown.querySelector('.dropdown-content');
+
+                // Toggle visibility on click
+                dropbtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const isVisible = dropdownContent.style.opacity === '1';
+                    
+                    // Close all others
+                    document.querySelectorAll('.dropdown-content').forEach(content => {
+                        content.style.display = 'none';
+                        content.style.opacity = '0';
+                        content.style.visibility = 'hidden';
+                    });
+                    
+                    if (!isVisible) {
+                        dropdownContent.style.display = 'block';
+                        // Force a reflow for transition to work
+                        void dropdownContent.offsetWidth; 
+                        dropdownContent.style.opacity = '1';
+                        dropdownContent.style.visibility = 'visible';
+                    }
+                });
+                
+                // Close when clicking outside
+                document.addEventListener('click', (e) => {
+                    if (!dropdown.contains(e.target)) {
+                        dropdownContent.style.opacity = '0';
+                        dropdownContent.style.visibility = 'hidden';
+                        setTimeout(() => dropdownContent.style.display = 'none', 400); // match CSS transition time
+                    }
+                });
+            });
+            
+            // Modal functions (adapted from MAIN.PAGE.html)
+            window.showModal = function(modalId) {
+                document.getElementById(modalId).style.display = 'block';
+            }
+
+            window.closeModal = function(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            }
+            
+            window.onclick = function(event) {
+                const modal = document.getElementById('infoModal');
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        });
+
+
+        // JS from luxury_real_estate_site.html (property filtering/pagination)
+        function filterProperties() {
+            // Functionality to filter properties would go here.
+            console.log('Filtering properties...');
+            // In a live site, this would read inputs and update the grid.
+        }
+
+        // Pagination functionality
+        document.querySelectorAll('.pagination a').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.pagination a').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Smooth scroll to top of properties
+                document.getElementById('propertiesGrid').scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            });
+        });
+
+        // Real-time search functionality
+        document.querySelectorAll('.filter-select, .filter-input').forEach(input => {
+            input.addEventListener('change', filterProperties);
+            input.addEventListener('input', function() {
+                // Debounce for text inputs
+                clearTimeout(this.searchTimeout);
+                this.searchTimeout = setTimeout(filterProperties, 300);
+            });
+        });
+        
+        // Property Card interactions (adapted to new classes)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.category-card')) {
+                const card = e.target.closest('.category-card');
+                if (!e.target.closest('.property-actions')) {
+                    // Add subtle pulse effect when card is clicked (but not on buttons)
+                    card.style.transform = 'translateY(-15px) scale(1.01)';
+                    setTimeout(() => {
+                        // Resets transform to the hover state set in CSS
+                        card.style.transform = 'translateY(-15px) scale(1.02)';
+                    }, 150);
+                }
+            }
+        });
+        
+    </script>
+</body>
+</html>
